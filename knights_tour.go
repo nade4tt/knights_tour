@@ -17,15 +17,14 @@ var directions = [8][2]int{
 	{2, -1},
 }
 
-func Walk(x int, y int, pointCount int, solution *[][]int) bool {
+func Walk(x int, y int, pointCount int, gridSize int, solution *[][]int) bool {
 	// Base case
-	GridSize := len((*solution)[0])
-	if pointCount == GridSize*GridSize {
+	if pointCount == gridSize*gridSize+1 {
 		return true
 	}
 
 	// Off the grid
-	if x < 0 || x >= GridSize || y < 0 || y >= GridSize {
+	if x < 0 || x >= gridSize || y < 0 || y >= gridSize {
 		return false
 	}
 
@@ -43,7 +42,7 @@ func Walk(x int, y int, pointCount int, solution *[][]int) bool {
 		newX := x + directions[i][0]
 		newY := y + directions[i][1]
 
-		if Walk(newX, newY, pointCount, solution) {
+		if Walk(newX, newY, pointCount, gridSize, solution) {
 			return true
 		}
 	}
@@ -62,7 +61,7 @@ func SolveKnightsTour(x int, y int, gridSize int) [][]int {
 		}
 	}
 
-	Walk(x, y, 1, &solution)
+	Walk(x, y, 1, gridSize, &solution)
 	return solution
 }
 
