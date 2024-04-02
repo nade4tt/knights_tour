@@ -6,15 +6,43 @@ import (
 	"os"
 )
 
-var directions = [8][2]int{
-	{2, 1},
-	{1, 2},
-	{-1, 2},
-	{-2, 1},
-	{-2, -1},
-	{-1, -2},
-	{1, -2},
-	{2, -1},
+type Move struct {
+	x int
+	y int
+}
+
+var directions = [8]Move{
+	{x: 2, y: 1},
+	{x: 1, y: 2},
+	{x: -1, y: 2},
+	{x: -2, y: 1},
+	{x: -2, y: -1},
+	{x: -1, y: -2},
+	{x: 1, y: -2},
+	{x: 2, y: -1},
+}
+
+func IsMoveValid(x int, y int, gridSize int, solution *[][]int) bool {
+	// Off the grid
+	if x < 0 || x >= gridSize || y < 0 || y >= gridSize {
+		return false
+	}
+
+	// Already visited
+	if (*solution)[y][x] != -1 {
+		return false
+	}
+
+	return true
+}
+
+func GetDirections(x int, y int) []Move {
+	result := make([]Move, 0)
+	for _, move := range directions {
+		newX, newY := move.x+x, move.y+y
+		result = append(result, Move{x: newX, y: newY})
+	}
+	return result
 }
 
 func Walk(x int, y int, pointCount int, gridSize int, solution *[][]int) bool {
@@ -38,11 +66,9 @@ func Walk(x int, y int, pointCount int, gridSize int, solution *[][]int) bool {
 	pointCount++
 
 	// Recurse
-	for i := range len(directions) {
-		newX := x + directions[i][0]
-		newY := y + directions[i][1]
-
-		if Walk(newX, newY, pointCount, gridSize, solution) {
+	// for i := range directions {
+	for _, move := range GetDirections(x, y) {
+		if Walk(move.x, move.y, pointCount, gridSize, solution) {
 			return true
 		}
 	}
