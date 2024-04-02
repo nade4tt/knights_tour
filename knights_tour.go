@@ -4,11 +4,13 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"sort"
 )
 
 type Move struct {
-	x int
-	y int
+	x                 int
+	y                 int
+	possiblePositions int
 }
 
 var GridSize = 8
@@ -25,25 +27,41 @@ var directions = [8]Move{
 }
 
 func IsMoveValid(x int, y int, solution *[][]int) bool {
-	// Off the grid
-	if x < 0 || x >= GridSize || y < 0 || y >= GridSize {
-		return false
-	}
-
-	// Already visited
-	if (*solution)[y][x] != -1 {
+	// Off the grid or already visited
+	if x < 0 || x >= GridSize || y < 0 || y >= GridSize || (*solution)[y][x] != -1 {
 		return false
 	}
 
 	return true
 }
 
-func GetDirections(x int, y int) []Move {
+func GetNumberOfValidPositions(x int, y int, solution *[][]int) int {
+	count := 0
+
+	for _, move := range directions {
+		newX, newY := x+move.x, y+move.y
+		if IsMoveValid(newX, newY, solution) {
+			count++
+		}
+	}
+
+	return count
+}
+
+func GetDirections(x int, y int, solution *[][]int) []Move {
 	result := make([]Move, 0)
 	for _, move := range directions {
 		newX, newY := move.x+x, move.y+y
-		result = append(result, Move{x: newX, y: newY})
+		if IsMoveValid(newX, newY, solution) {
+			result = append(result, Move{x: newX, y: newY, possiblePositions: GetNumberOfValidPositions(newX, newY, solution)})
+		}
 	}
+
+  // sort
+  sort.Slice(result, func(i, j int) bool {
+    return result[i].possiblePositions < result[j].possiblePositions
+  })
+
 	return result
 }
 
@@ -53,23 +71,22 @@ func Walk(x int, y int, pointCount int, solution *[][]int) bool {
 		return true
 	}
 
-	// Off the grid
-	if x < 0 || x >= GridSize || y < 0 || y >= GridSize {
-		return false
-	}
+	// // Off the grid
+	// if x < 0 || x >= GridSize || y < 0 || y >= GridSize {
+	// 	return false
+	// }
 
-	// Already visited
-	if (*solution)[y][x] != -1 {
-		return false
-	}
+	// // Already visited
+	// if (*solution)[y][x] != -1 {
+	// 	return false
+	// }
 
 	// PRE condition
 	(*solution)[y][x] = pointCount
 	pointCount++
 
 	// Recurse
-	// for i := range directions {
-	for _, move := range GetDirections(x, y) {
+	for _, move := range GetDirections(x, y, solution) {
 		if Walk(move.x, move.y, pointCount, solution) {
 			return true
 		}
