@@ -11,6 +11,8 @@ type Move struct {
 	y int
 }
 
+var GridSize = 8
+
 var directions = [8]Move{
 	{x: 2, y: 1},
 	{x: 1, y: 2},
@@ -22,9 +24,9 @@ var directions = [8]Move{
 	{x: 2, y: -1},
 }
 
-func IsMoveValid(x int, y int, gridSize int, solution *[][]int) bool {
+func IsMoveValid(x int, y int, solution *[][]int) bool {
 	// Off the grid
-	if x < 0 || x >= gridSize || y < 0 || y >= gridSize {
+	if x < 0 || x >= GridSize || y < 0 || y >= GridSize {
 		return false
 	}
 
@@ -45,14 +47,14 @@ func GetDirections(x int, y int) []Move {
 	return result
 }
 
-func Walk(x int, y int, pointCount int, gridSize int, solution *[][]int) bool {
+func Walk(x int, y int, pointCount int, solution *[][]int) bool {
 	// Base case
-	if pointCount == gridSize*gridSize+1 {
+	if pointCount == GridSize*GridSize+1 {
 		return true
 	}
 
 	// Off the grid
-	if x < 0 || x >= gridSize || y < 0 || y >= gridSize {
+	if x < 0 || x >= GridSize || y < 0 || y >= GridSize {
 		return false
 	}
 
@@ -68,7 +70,7 @@ func Walk(x int, y int, pointCount int, gridSize int, solution *[][]int) bool {
 	// Recurse
 	// for i := range directions {
 	for _, move := range GetDirections(x, y) {
-		if Walk(move.x, move.y, pointCount, gridSize, solution) {
+		if Walk(move.x, move.y, pointCount, solution) {
 			return true
 		}
 	}
@@ -78,21 +80,21 @@ func Walk(x int, y int, pointCount int, gridSize int, solution *[][]int) bool {
 	return false
 }
 
-func SolveKnightsTour(x int, y int, gridSize int) [][]int {
-	solution := make([][]int, gridSize)
-	for i := range gridSize {
-		solution[i] = make([]int, gridSize)
-		for j := range gridSize {
+func SolveKnightsTour(x int, y int) [][]int {
+	solution := make([][]int, GridSize)
+	for i := range GridSize {
+		solution[i] = make([]int, GridSize)
+		for j := range GridSize {
 			solution[i][j] = -1
 		}
 	}
 
-	Walk(x, y, 1, gridSize, &solution)
+	Walk(x, y, 1, &solution)
 	return solution
 }
 
-func GetPadding(gridSize int) int {
-	maxVal := gridSize * gridSize
+func GetPadding() int {
+	maxVal := GridSize * GridSize
 	count := 0
 	for maxVal > 0 {
 		maxVal /= 10
@@ -102,9 +104,7 @@ func GetPadding(gridSize int) int {
 }
 
 func PrintGrid(grid *[][]int) {
-	gridSize := len((*grid))
-
-	padding := GetPadding(gridSize)
+	padding := GetPadding()
 
 	for i := range len((*grid)) {
 		for j := range len((*grid)[0]) {
@@ -114,12 +114,12 @@ func PrintGrid(grid *[][]int) {
 	}
 }
 
-func validateInputArguments(x *int, y *int, gridSize int) {
-	if *x < 0 || *x >= gridSize {
+func validateInputArguments(x *int, y *int) {
+	if *x < 0 || *x >= GridSize {
 		fmt.Println("Invalid X coordinate")
 		os.Exit(1)
 	}
-	if *y < 0 || *y >= gridSize {
+	if *y < 0 || *y >= GridSize {
 		fmt.Println("Invalid Y coordinate")
 		os.Exit(1)
 	}
@@ -128,13 +128,12 @@ func validateInputArguments(x *int, y *int, gridSize int) {
 func main() {
 	startX := flag.Int("x", 0, "Starting X coordinate")
 	startY := flag.Int("y", 0, "Starting Y coordinate")
-	gridSize := flag.Int("size", 8, "Size of a grid")
 	flag.Parse()
 
-	validateInputArguments(startX, startY, *gridSize)
+	validateInputArguments(startX, startY)
 
 	fmt.Printf("X: %d, Y: %d\n", *startX, *startY)
 
-	grid := SolveKnightsTour(*startX, *startY, *gridSize)
+	grid := SolveKnightsTour(*startX, *startY)
 	PrintGrid(&grid)
 }
