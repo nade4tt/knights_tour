@@ -1,13 +1,17 @@
-// func createBoard()
-//     1. Initialize board as a 2D array of size N x N
-//     2. Set all values in board to 0
-//     3. Return board
+package tour
+
+// Algorithm KnightsTour
+// Input: startX, startY (the starting position of the knight on the chessboard)
+// Output: A sequence of moves leading to the solution or a message indicating that no solution exists
 
 // Function isValid(x, y, board)
-//     1. If x and y are within the bounds of the board and board[x][y] is 0
-//         a. Return True
-//     2. Else
-//         a. Return False
+//  1. If x and y are within the bounds of the board and board[x][y] is 0
+//     a. Return True
+//  2. Else
+//     a. Return False
+func IsValid(x int, y int, board *[][]int, boardSize int) bool {
+	return x >= 0 && x <= boardSize-1 && y >= 0 && y <= boardSize-1 && (*board)[y][x] == -1
+}
 
 // Function nextMove(x, y, board)
 //     1. Initialize minDeg to N+1 and minMoveIndex to -1
@@ -35,31 +39,8 @@
 //     5. Return True
 
 // Main
-//  1. Set startX, startY to the desired starting position
-//  2. If solveKT(startX, startY) is False
-//     a. Print "Solution does not exist"
-//  3. Else
-//     a. Print the solution
-package main
-
-import "fmt"
-
-func createBoard() {
-
-}
-
-func isValid() {
-
-}
-
-func nextMove(x int, y int, board *[][]int) {
-
-}
-
-func solveKT(startX int, startY int) {
-
-}
-
-func main() {
-	fmt.Println("Knight's Tour Problem")
-}
+//     1. Set startX, startY to the desired starting position
+//     2. If solveKT(startX, startY) is False
+//         a. Print "Solution does not exist"
+//     3. Else
+//         a. Print the solution
