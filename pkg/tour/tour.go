@@ -1,7 +1,5 @@
 package tour
 
-import "cmd/knights_tour.go/pkg/board"
-
 func IsValid(x int, y int, board *[][]int, boardSize int) bool {
 	return x >= 0 && x <= boardSize-1 && y >= 0 && y <= boardSize-1 && (*board)[y][x] == -1
 }
