@@ -1,6 +1,6 @@
 package tour
 
-func IsValid(x int, y int, board *[][]int, boardSize int) bool {
+func isValid(x int, y int, board *[][]int, boardSize int) bool {
 	return x >= 0 && x <= boardSize-1 && y >= 0 && y <= boardSize-1 && (*board)[y][x] == -1
 }
 
@@ -24,9 +24,9 @@ func nextMove(x int, y int, chessBoard *[][]int, boardSize int) (int, int, bool)
 		newY := y + move[1]
 
 		count := 0
-		if IsValid(newX, newY, chessBoard, boardSize) {
+		if isValid(newX, newY, chessBoard, boardSize) {
 			for _, move := range moves {
-				if IsValid(newX+move[0], newY+move[1], chessBoard, boardSize) {
+				if isValid(newX+move[0], newY+move[1], chessBoard, boardSize) {
 					count++
 				} else {
 					continue
