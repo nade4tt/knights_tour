@@ -48,4 +48,17 @@ func TestMain(t *testing.T) {
 	if tour.IsValid(5, 6, &chessBoard, boardSize) {
 		t.Error("Move shall be invalid")
 	}
+
+  chessBoard = board.GetBoard(boardSize)
+
+  // Test every position
+  for i := range boardSize {
+    for j := range boardSize {
+      chessBoard = board.GetBoard(boardSize)
+      ok := tour.SolveKT(i, j, &chessBoard)
+      if !ok {
+        t.Errorf("No solution found for x: %d y: %d", i, j)
+      }
+    }
+  }
 }

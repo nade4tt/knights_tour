@@ -1,10 +1,19 @@
 package main
 
 import (
-	board "cmd/knights_tour.go/pkg/board"
+	tour "cmd/knights_tour.go/pkg/tour"
+	"cmd/knights_tour.go/pkg/board"
 )
 
 func main() {
-	chessBoard := board.GetBoard(8)
-	board.PrintBoard(&chessBoard)
+	boardSize := 8
+
+	chessBoard := board.GetBoard(boardSize)
+	ok := tour.SolveKT(0, 5, &chessBoard)
+
+	if ok {
+		board.PrintBoard(&chessBoard)
+	} else {
+		println("No solution found")
+	}
 }
